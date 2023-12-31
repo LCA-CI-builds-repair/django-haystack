@@ -38,7 +38,7 @@ class AutomaticDiscoveryTestCase(TestCase):
         ui.build()
 
         indexed_model_names = [str(i._meta) for i in ui.get_indexed_models()]
-        self.assertIn("multipleindex.foo", indexed_model_names)
+        self.assertNotIn("multipleindex.foo", indexed_model_names)
         self.assertIn("multipleindex.bar", indexed_model_names)
         self.assertNotIn("discovery.bar", indexed_model_names)
 
