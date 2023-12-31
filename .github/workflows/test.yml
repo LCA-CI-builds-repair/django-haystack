@@ -22,7 +22,7 @@ jobs:
       matrix:  # https://docs.djangoproject.com/en/5.0/faq/install/#what-python-version-can-i-use-with-django
         django-version: ["3.2", "4.0", "4.1", "4.2"]
         python-version: ["3.8", "3.9"]
-        elastic-version: ["7.17.16"]
+        elastic-version: ["7.17.9"]
     services:
       elastic:
         image: elasticsearch:${{ matrix.elastic-version }}
