@@ -19,7 +19,7 @@ ignore = ["B018", "B028", "B904", "B905"]
 line-length = 162
 select = ["ASYNC", "B", "C4", "E", "F", "G", "PLR091", "W"]
 show-source = true
-target-version = "py37"
+target-version = "py38"
 
 [tool.ruff.isort]
 known-first-party = ["haystack", "test_haystack"]
