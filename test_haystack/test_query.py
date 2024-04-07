@@ -439,13 +439,15 @@ class SearchQuerySetTestCase(TestCase):
     def test_len(self):
         self.assertEqual(len(self.msqs), 23)
 
-    def test_repr(self):
-        reset_search_queries()
-        self.assertEqual(len(connections["default"].queries), 0)
-        self.assertRegexp(
-            repr(self.msqs),
-            r"^<SearchQuerySet: query=<test_haystack.mocks.MockSearchQuery object"
-            r" at 0x[0-9A-Fa-f]+>, using=None>$",
+def test_repr(self):
+    reset_search_queries()
+    self.assertEqual(len(connections["default"].queries), 0)
+    self.assertRegexp(
+        repr(self.msqs),
+        r"^<SearchQuerySet: query=<test_haystack.mocks.MockSearchQuery object"
+        r" at 0x[0-9A-Fa-f]+>, using=None>$",
+        "SearchQuerySet __repr__() should return a valid string"
+    )
         )
 
     def test_iter(self):
