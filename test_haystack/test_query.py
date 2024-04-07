@@ -439,13 +439,17 @@ class SearchQuerySetTestCase(TestCase):
     def test_len(self):
         self.assertEqual(len(self.msqs), 23)
 
-    def test_repr(self):
-        reset_search_queries()
-        self.assertEqual(len(connections["default"].queries), 0)
-        self.assertRegexp(
-            repr(self.msqs),
-            r"^<SearchQuerySet: query=<test_haystack.mocks.MockSearchQuery object"
-            r" at 0x[0-9A-Fa-f]+>, using=None>$",
+def test_repr(self):
+    # Apply the fixture to set up the required object in the database.
+    core_afifthmockmodel_fixture = open(os.path.join(os.path.dirname(__file__), 'fixtures', 'core_afifthmockmodel.json')).read()
+    transactions.deserialize(core_afifthmockmodel_fixture)
+
+    reset_search_queries()
+    self.assertEqual(len(connections["default"].queries), 0)
+    self.assertRegexp(
+        repr(self.msqs),
+        r"^<SearchQuerySet: query=<test_haystack.mocks.MockSearchQuery object"
+        r" at 0x[0-9A-Fa-f]+>, using=None>$",
         )
 
     def test_iter(self):
