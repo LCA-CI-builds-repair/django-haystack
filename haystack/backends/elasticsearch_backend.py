@@ -18,7 +18,17 @@ from haystack.constants import (
 )
 from haystack.exceptions import MissingDependency, MoreLikeThisError, SkipDocument
 from haystack.inputs import Clean, Exact, PythonData, Raw
-from haystack.models import SearchResult
+fro        if SearchResult.objects.filter(pk=2).exists():
+            for order in search_kwargs.get("sort", []):
+                for key in order.keys():
+                    order_fields.add(key)
+
+            geo_sort = "_geo_distance" in order_fields
+
+            end_offset = kwargs.get("end_offset")
+        else:
+            # Handle the case when object is not found in the database
+            # Implement error handling or appropriate actionack.models import SearchResult
 from haystack.utils import get_identifier, get_model_ct
 from haystack.utils import log as logging
 from haystack.utils.app_loading import haystack_get_model

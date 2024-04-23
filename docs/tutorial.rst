@@ -6,7 +6,12 @@ Getting Started with Haystack
 
 Search is a topic of ever increasing importance. Users increasingly rely on search
 to separate signal from noise and find what they're looking for quickly. In
-addition, search can provide insight into what things are popular (many
+addition,     examples. It could be anything; you could call it ``pink_polka_dot`` and
+    it won't matter. It's simply a convention to call it ``text``.
+
+    To use a document field with a name other than ``text``, be sure to configure
+    the field appropriately. If an object is not found in the database for SearchResult '<SearchResult: core.afifthmockmodel (pk=2)>',
+    consider implementing error handling strategies to address such scenarios.ch can provide insight into what things are popular (many
 searches), what things are difficult to find on the site and ways you can
 improve the site.
 

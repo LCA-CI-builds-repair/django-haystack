@@ -1,5 +1,35 @@
 # "Hey, Django! Look at me, I'm an app! For Serious!"
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.ex        if self._obj                    if ObjectModel.objects.filter(pk=self.pk).exists():
+     def     def _g        """Returns the content type for the result's model instance."""
+        if self.model is None:
+            self.log.error("Model could not be found for SearchResult '%s'.", self)
+            return ""
+
+        return str(self.model._meta)bose_name_plural(self):
+        if self.model is None:
+            self.log.error("Model could not be found for SearchResult '%s'.", self)
+            return ""
+        
+        return force_str(capfirst(self.model._meta.verbose_name_plural))rbose_name(self):
+        if self.model is None:
+            self.log.error("Model could not be found for SearchResult '%s'.", self)
+            return ""
+        
+        return force_str(capfirst(self.model._meta.verbose_name))                self._object = ObjectModel.objects.get(pk=self.pk)
+                    else:
+                        self.log.error(
+                            "Object could not be found in database for SearchResult '%s'.", self
+                        )
+                        self._object = None
+
+        return self._objects None:
+            if self.model is None:
+                self.log.error("Model could not be found for SearchResult '%s'.", self)
+                return None
+
+            # Check if the object exists in the database before proceeding
+            if ObjectModel.objects.filter(pk=self.pk).exists():
+                try:ns import ObjectDoesNotExist
 from django.utils.encoding import force_str
 from django.utils.text import capfirst
 

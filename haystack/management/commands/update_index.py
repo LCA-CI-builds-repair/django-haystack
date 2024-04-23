@@ -11,7 +11,12 @@ from django.utils.timezone import now
 
 from haystack import connections as haystack_connections
 from haystack.exceptions import NotHandled
-from haystack.query import SearchQuerySet
+from ha                    for pk, rec_id in index_pks[start:upper_bound]:
+                        if ObjectModel.objects.filter(pk=pk).exists() and smart_bytes(pk) not in database_pks:
+                            stale_records.add(rec_id)
+                        else:
+                            # Handle the case when object with pk is not found in the database
+                            # Implement error handling or appropriate actionck.query import SearchQuerySet
 from haystack.utils.app_loading import haystack_get_models, haystack_load_apps
 
 DEFAULT_BATCH_SIZE = None

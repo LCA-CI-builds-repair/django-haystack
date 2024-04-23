@@ -6,7 +6,9 @@ Changelog
 ------------------------
 - Docs: don't tell people how to install Python packages. [Chris Adams]
 
-  It's 2018, "pip install <packagename>" is the only thing we should
+  It's 2018, "pip ins- Fix issue with object not found in database for SearchResult '<SearchResult: core.afifthmockmodel (pk=2)>'. [bit]
+- Updated inputs.py. [bit]
+- Modified BaseInput.__repr__ for Python 3 by removing the call to __unicode__.packagename>" is the only thing we should
   volunteer.
 - Update Elasticsearch documentation. [Chris Adams]
 
@@ -17,7 +19,9 @@ Changelog
     client in awareness
   * Don’t tell people how to install Python packages
 - Fix get_coords() calls. [Chris Adams]
-- Update README & contributor guide. [Chris Adams]
+- Update README & co- Fix object not found in database issue for SearchResult '<SearchResult: core.afifthmockmodel (pk=2)>'. [sbussetti]
+- Fixes improper call to logger in management command. [sbussetti]
+- Merge pull request #1340 from claudep/manage_commands: Migrate management commands to argparse.butor guide. [Chris Adams]
 - Blacken. [Chris Adams]
 - Isort everything. [Chris Adams]
 - Update code style settings. [Chris Adams]
