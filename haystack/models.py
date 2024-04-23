@@ -1,7 +1,86 @@
 # "Hey, Django! Look at me, I'm an app! For Serious!"
-from django.core.exceptions import ObjectDoesNotExist
-from django.utils.encoding import force_str
+frofrom django.utils.encoding import force_str
 from django.utils.text import capfirst
+from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.gis.measure import Distance
+
+def _get_searchindex(self):
+    from haystack import connections
+    from haystack.constants import DEFAULT_ALIAS
+
+    if DEFAULT_ALIAS not in connections:
+        raise AttributeError("Default alias not found in connections.")
+
+    return connections[DEFAULT_ALIAS].get_unified_index().get_index(self.model)
+
+def _get_object(self):
+    if self._object is None:
+        if self.model is None:
+            self.log.error("Model could not be found for SearchResult '%s'.", self)
+            return None
+
+        try:
+            try:
+                self._object = self.searchindex.read_queryset().get(pk=self.pk)
+            except NotHandled:
+                self.log.warning(
+                    "Model '%s.%s' not handled by the routers.",
+                    self.app_label,
+                    self.model_name,
+                )
+                self._object = self.model._default_manager.get(pk=self.pk)
+        except ObjectDoesNotExist:
+            self.log.error(
+                "Object could not be found in database for SearchResult '%s'.", self
+            )
+            self._object = None
+
+    return self._object
+
+def _get_model(self):
+    if self._model is None:
+        try:
+            self._model = haystack_get_model(self.app_label, self.model_name)
+        except LookupError:
+            pass
+
+    return self._model
+
+def _get_distance(self):
+    if self._distance is None:
+        if geopy_distance is None:
+            raise SpatialError(
+                "The backend doesn't have 'DISTANCE_AVAILABLE' enabled & the 'geopy' library could not be imported, so distance information is not available."
+            )
+
+        if not self._point_of_origin:
+            raise SpatialError("The original point is not available.")
+
+        if not hasattr(self, self._point_of_origin["field"]):
+            raise SpatialError(
+                "The field '%s' was not included in search results, so the distance could not be calculated."
+                % self._point_of_origin["field"]
+            )
+
+        po_lng, po_lat = self._point_of_origin["point"].coords
+        location_field = getattr(self, self._point_of_origin["field"])
+
+        if location_field is None:
+            return None
+
+        lf_lng, lf_lat = location_field.coords
+        self._distance = Distance(
+            km=geopy_distance.distance((po_lat, po_lng), (lf_lat, lf_lng)).km
+        )
+
+    return self._distance
+
+def content_type(self):
+    if self.model is None:
+        self.log.error("Model could not be found for SearchResult '%s'.", self)
+        return ""
+
+    return str(self.model._meta)irst
 
 from haystack.constants import DEFAULT_ALIAS
 from haystack.exceptions import NotHandled, SpatialError
