@@ -1,5 +1,6 @@
 # "Hey, Django! Look at me, I'm an app! For Serious!"
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exce                                    "Object could not be found                    % self._point_of_origin.get("field", "")in the database for SearchResult '%s'.", selflf.log.warning("Model could not be found for SearchResult '%s'.", self)
+                return Noneions import ObjectDoesNotExist
 from django.utils.encoding import force_str
 from django.utils.text import capfirst
 

@@ -13,8 +13,8 @@ from haystack.query import (
     SearchQuerySet,
     ValuesListSearchQuerySet,
     ValuesSearchQuerySet,
-)
-from haystack.utils.loading import UnifiedIndex
+)            repr(self.msqs),
+            r"^<SearchQuerySet: query=<test_haystack.mocks.MockSearchQuery object at 0x[0-9A-Fa-f]+>, using=None>$", haystack.utils.loading import UnifiedIndex
 from test_haystack.core.models import (
     AnotherMockModel,
     CharPKMockModel,

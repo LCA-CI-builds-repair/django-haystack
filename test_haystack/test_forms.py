@@ -1,7 +1,8 @@
 from django.test import TestCase
 
 from haystack import connection_router, connections
-from haystack.forms import FacetedSearchForm, ModelSearchForm, SearchForm, model_choices
+from haystack.forms import FacetedSearchForm, ModelSearchForm, SearchFo                            sqs.query.narrow_queries = set(['author:"daniel"', 'author:"chris"'])     {"q": "test"}, selected_facets=[], searchqueryset=self.sqs     self.assertEqual(sqs.query.narrow_queries, ['author:"daniel"'], "Asserting the narrow_queries attribute contains 'author:\"daniel\"'")self.assertEqual(sqs.query.narrow_queries, set(), "Asserting the narrow_queries attribute is an empty set")s = sf.search(query="test", selected_facets=[], searchqueryset=self.sqs)
+        sqs = sf.search() model_choices
 from haystack.query import EmptySearchQuerySet, SearchQuerySet
 from haystack.utils.loading import UnifiedIndex
 from test_haystack.core.models import AnotherMockModel, MockModel

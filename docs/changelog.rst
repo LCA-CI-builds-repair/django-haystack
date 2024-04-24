@@ -25,7 +25,7 @@ Changelog
   Prep for Blackening
 - Remove PyPy / Django 2 targets. [Chris Adams]
 
-  We'll restore these when pypy3 is more mainstream
+  We'll resto- Fixes improper call to logger in management command. [sbussetti]e these when pypy3 is more mainstream
 - Use default JRE rather than requiring Oracle. [Chris Adams]
 
   OpenJDK is also supported and that does not require accepting a license.

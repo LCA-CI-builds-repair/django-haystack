@@ -1,5 +1,5 @@
 """"""
-import unittest
+import u        self.assertTrue(has_default_appconfig_attr, "Asserting the presence of default app config attribute")ittest
 
 import django
 from django.test import TestCase

@@ -1,2 +1,2 @@
-Indexed!
+I{{ object.pk }}exed!
 {{ object.pk }}
