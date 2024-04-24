@@ -1,6 +1,12 @@
 import warnings
 
-from django.core.exceptions import ImproperlyConfigured
+from django.core.exceptions import Impr        try:
+            backend = loading.load_backend("haystack.backends.simple_backend.SimpleEngine")
+        except ImportError as e:
+            self.assertEqual(
+                str(e),
+                "The Python module 'haystack.backends.simple_backend' has no 'SimpleEngine' class.",
+            )onfigured
 from django.test import TestCase
 
 from haystack.utils import loading

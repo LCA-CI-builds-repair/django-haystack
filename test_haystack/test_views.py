@@ -1,10 +1,78 @@
 import queue
 import time
-from threading import Thread
+from thfrom django.http import HttpRequest
+from django.test import TestCase
+from django.urls import reverse
+from haystack.views import SearchVifrom django.http import HttpRequest
+from django.test import TestCase
+from django.http import QueryDict
+from haystack.views import FacetedSearchView
 
-from django import forms
-from django.http import HttpRequest, QueryDict
-from django.test import TestCase, override_settings
+class TestViews(TestCase):
+    def test_faceted_search_view_no_selected_facets(self):
+        fsv = FacetedSearchView()
+        fsv.request = HttpRequest()
+        fsv.request.GET = QueryDict("")
+        fsv.form = fsv.build_form()
+        self.assertEqual(fsv.form.selected_facets, [])
+
+    def test_faceted_search_view_with_selected_facets(self):
+        fsv = FacetedSearchView()
+        fsv.request = HttpRequest()
+        fsv.request.GET = QueryDict(
+            "selected_facets=author:daniel&selected_facets=author:chris"
+        )
+        fsv.form = fsv.build_form()
+        self.assertEqual(fsv.form.selected_facets, ["author:daniel", "author:chris"])ack.query import EmptySearchQuerySet
+import queue
+from threading import Thread
+import time
+
+class TestViews(TestCase):
+    fixtures = ["base_data"]
+
+    def setUp(self):
+        super().setUpClass()
+
+        # Stow.
+        self.old_unified_index = connections["default"]._index
+        self.ui = UnifiedIndex()
+        self.bmmsi = BasicMockModelSearchIndex()
+        self.bammsi = BasicAnotherMockModelSearchIndex()
+        self.ui.build(indexes=[self.bmmsi, self.bammsi])
+        connections["default"]._index = self.ui
+
+        # Update the "index".
+        backend = connections["default"].get_backend()
+        backend.clear()
+        backend.update(self.bmmsi, MockModel.objects.all())
+
+    def tearDown(self):
+        connections["default"]._index = self.old_unified_index
+        super().tearDown()
+
+    def test_search_no_query(self):
+        response = self.client.get(reverse("haystack_search"))
+        self.assertEqual(response.status_code, 200)
+
+    def test_search_query(self):
+        response = self.client.get(reverse("haystack_search"), {"q": "haystack"})
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("page", response.context)
+        self.assertNotIn("page_obj", response.context)
+        self.assertEqual(len(response.context["page"].object_list), 3)
+        self.assertEqual(
+            response.context["page"].object_list[0].content_type(), "core.mockmodel"
+        )
+        self.assertEqual(response.context["page"].object_list[0].pk, "1")
+
+    def test_invalid_page(self):
+        response = self.client.get(
+            reverse("haystack_search"), {"q": "haystack", "page": "165233"}
+        )
+        self.assertEqual(response.status_code, 404)
+
+    # Add more test methods here based on the provided code snippete_settings
 from django.urls import reverse
 
 from haystack import connections, indexes

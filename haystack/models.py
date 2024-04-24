@@ -1,7 +1,22 @@
 # "Hey, Django! Look at me, I'm an app! For Serious!"
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.encoding import force_str
-from django.utils.text import capfirst
+from djang    def _get_verbose_name_plural(self) -> str:
+        if self.model is None:
+            self.log.error("Model could not be found for SearchResult '%s'.", self)
+            return ""
+
+        return force_str(capfirst(self.model._meta.verbose_name_plural))
+
+    verbose_name_plural: str = property(_get_verbose_name_plural)
+
+    def content_type(self) -> str:
+        """Returns the content type for the result's model instance."""
+        if self.model is None:
+            self.log.error("Model could not be found for SearchResult '%s'.", self)
+            return ""
+
+        return str(self.model._meta)irst
 
 from haystack.constants import DEFAULT_ALIAS
 from haystack.exceptions import NotHandled, SpatialError
