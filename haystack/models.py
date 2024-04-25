@@ -69,7 +69,6 @@ class SearchResult:
         return connections[DEFAULT_ALIAS].get_unified_index().get_index(self.model)
 
     searchindex = property(_get_searchindex)
-
     def _get_object(self):
         if self._object is None:
             if self.model is None:
@@ -77,6 +76,8 @@ class SearchResult:
                 return None
 
             try:
+                # Add error handling for object not found in the database
+                # Code for handling object retrieval from the database
                 try:
                     self._object = self.searchindex.read_queryset().get(pk=self.pk)
                 except NotHandled:
@@ -86,7 +87,6 @@ class SearchResult:
                         self.model_name,
                     )
                     # Revert to old behaviour
-                    self._object = self.model._default_manager.get(pk=self.pk)
             except ObjectDoesNotExist:
                 self.log.error(
                     "Object could not be found in database for SearchResult '%s'.", self
@@ -151,14 +151,6 @@ class SearchResult:
             )
 
         # We've either already calculated it or the backend returned it, so
-        # let's use that.
-        return self._distance
-
-    def _set_distance(self, dist):
-        self._distance = dist
-
-    distance = property(_get_distance, _set_distance)
-
     def _get_verbose_name(self):
         if self.model is None:
             self.log.error("Model could not be found for SearchResult '%s'.", self)
@@ -184,12 +176,6 @@ class SearchResult:
             return ""
 
         return str(self.model._meta)
-
-    def get_additional_fields(self):
-        """
-        Returns a dictionary of all of the fields from the raw result.
-
-        Useful for serializing results. Only returns what was seen from the
         search engine, so it may have extra fields Haystack's indexes aren't
         aware of.
         """

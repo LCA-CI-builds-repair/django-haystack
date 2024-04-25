@@ -397,9 +397,15 @@ class Command(BaseCommand):
                 # Since records may still be in the search index but not the local database
                 # we'll use that to create batches for processing.
                 # See https://github.com/django-haystack/django-haystack/issues/1186
-                index_total = (
-                    SearchQuerySet(using=backend.connection_alias).models(model).count()
-                )
+                try:
+                    index_total = (
+                        SearchQuerySet(using=backend.connection_alias).models(model).count()
+                    )
+                except ObjectDoesNotExist:
+                    self.log.error(
+                        "Object could not be found in database for SearchResult '%s'.", self
+                    )
+                    index_total = 0  # Set index_total to 0 if object not found in database
 
                 # Retrieve PKs from the index. Note that this cannot be a numeric range query because although
                 # pks are normally numeric they can be non-numeric UUIDs or other custom values. To reduce
