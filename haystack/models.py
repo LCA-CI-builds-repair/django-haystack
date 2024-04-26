@@ -69,12 +69,12 @@ class SearchResult:
         return connections[DEFAULT_ALIAS].get_unified_index().get_index(self.model)
 
     searchindex = property(_get_searchindex)
-
     def _get_object(self):
         if self._object is None:
             if self.model is None:
                 self.log.error("Model could not be found for SearchResult '%s'.", self)
                 return None
+            # Add logic to initialize and return the object based on the model when _object is None
 
             try:
                 try:
@@ -86,13 +86,13 @@ class SearchResult:
                         self.model_name,
                     )
                     # Revert to old behaviour
-                    self._object = self.model._default_manager.get(pk=self.pk)
-            except ObjectDoesNotExist:
-                self.log.error(
-                    "Object could not be found in database for SearchResult '%s'.", self
-                )
-                self._object = None
-
+                    try:
+                        self._object = self.model._default_manager.get(pk=self.pk)
+                    except ObjectDoesNotExist:
+                        self.log.error(
+                            "Object could not be found in database for SearchResult '%s'.", self
+                        )
+                        self._object = None
         return self._object
 
     def _set_object(self, obj):

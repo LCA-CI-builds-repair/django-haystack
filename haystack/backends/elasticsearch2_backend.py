@@ -376,6 +376,8 @@ class Elasticsearch2SearchBackend(ElasticsearchSearchBackend):
 
 
 class Elasticsearch2SearchQuery(ElasticsearchSearchQuery):
+class Elasticsearch2SearchBackend(BaseSearchBackend):
+    # Implement required methods here
     pass
 
 

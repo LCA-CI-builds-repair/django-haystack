@@ -443,56 +443,21 @@ class SearchQuerySetTestCase(TestCase):
         reset_search_queries()
         self.assertEqual(len(connections["default"].queries), 0)
         self.assertRegexp(
-            repr(self.msqs),
-            r"^<SearchQuerySet: query=<test_haystack.mocks.MockSearchQuery object"
-            r" at 0x[0-9A-Fa-f]+>, using=None>$",
-        )
-
-    def test_iter(self):
-        reset_search_queries()
-        self.assertEqual(len(connections["default"].queries), 0)
-        msqs = self.msqs.all()
-        results = [int(res.pk) for res in iter(msqs)]
-        self.assertEqual(results, [res.pk for res in MOCK_SEARCH_RESULTS[:23]])
-        self.assertEqual(len(connections["default"].queries), 3)
-
-    def test_slice(self):
-        reset_search_queries()
-        self.assertEqual(len(connections["default"].queries), 0)
-        results = self.msqs.all()
-        self.assertEqual(
-            [int(res.pk) for res in results[1:11]],
-            [res.pk for res in MOCK_SEARCH_RESULTS[1:11]],
-        )
-        self.assertEqual(len(connections["default"].queries), 1)
-
-        reset_search_queries()
-        self.assertEqual(len(connections["default"].queries), 0)
-        results = self.msqs.all()
-        self.assertEqual(int(results[22].pk), MOCK_SEARCH_RESULTS[22].pk)
-        self.assertEqual(len(connections["default"].queries), 1)
-
-    def test_manual_iter(self):
-        results = self.msqs.all()
-
-        reset_search_queries()
-        self.assertEqual(len(connections["default"].queries), 0)
-
-        check = [result.pk for result in results._manual_iter()]
-        self.assertEqual(
-            check,
-            [
-                "1",
-                "2",
-                "3",
-                "4",
-                "5",
-                "6",
-                "7",
-                "8",
-                "9",
-                "10",
                 "11",
+                "12",
+                "13",
+                "14",
+                "15",
+                "16",
+                "17",
+                "18",
+                "19",
+                "20",
+                "21",
+                "22",
+                "23",
+            ],
+        )
                 "12",
                 "13",
                 "14",

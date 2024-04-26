@@ -62,13 +62,15 @@ mv ${CORE_DIR}/conf/managed-schema ${CORE_DIR}/conf/managed-schema.old
 cp ${CONF_DIR}/* ${CORE_DIR}/conf/
 
 echo 'Starting server'
+#!/bin/bash
+
 cd server
 # We use exec to allow process monitors to correctly kill the
 # actual Java process rather than this launcher script:
 export CMD="java -Djetty.port=${SOLR_PORT} -Djava.awt.headless=true -Dapple.awt.UIElement=true -jar start.jar --module=http -Dsolr.install.dir=${FULL_SOLR_DIR} -Dsolr.log.dir=${SOLR_LOGS_DIR}"
 
 if [ -z "${BACKGROUND_SOLR}" ]; then
-    exec $CMD
+    exec "$CMD"
 else
-    exec $CMD >/dev/null &
+    exec "$CMD" >/dev/null 2>&1 &
 fi
