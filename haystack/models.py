@@ -71,10 +71,9 @@ class SearchResult:
     searchindex = property(_get_searchindex)
 
     def _get_object(self):
-        if self._object is None:
-            if self.model is None:
-                self.log.error("Model could not be found for SearchResult '%s'.", self)
-                return None
+if self._object is None and self.model is None:
+    self.log.error("Model could not be found for SearchResult '%s'.", self)
+    return None
 
             try:
                 try:
@@ -88,11 +87,9 @@ class SearchResult:
                     # Revert to old behaviour
                     self._object = self.model._default_manager.get(pk=self.pk)
             except ObjectDoesNotExist:
-                self.log.error(
-                    "Object could not be found in database for SearchResult '%s'.", self
-                )
-                self._object = None
-
+except ObjectDoesNotExist:
+    self.log.error("Object could not be found in database for SearchResult '%s'.", self)
+    self._object = None
         return self._object
 
     def _set_object(self, obj):
@@ -180,9 +177,10 @@ class SearchResult:
     def content_type(self):
         """Returns the content type for the result's model instance."""
         if self.model is None:
-            self.log.error("Model could not be found for SearchResult '%s'.", self)
-            return ""
-
+def content_type(self):
+    """Returns the content type for the result's model instance."""
+    if self.model is None:
+        return None  # Add a return statement or relevant handling here
         return str(self.model._meta)
 
     def get_additional_fields(self):
