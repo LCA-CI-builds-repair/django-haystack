@@ -80,7 +80,6 @@ class CoreManagementCommandsTestCase(TestCase):
 
     @patch("haystack.management.commands.update_index.Command.handle")
     @patch("haystack.management.commands.clear_index.Command.handle")
-    @unittest.skip("TODO (cclauss): Fix me!")
     def test_rebuild_index_nocommit(self, *mocks):
         call_command("rebuild_index", interactive=False, commit=False)
 

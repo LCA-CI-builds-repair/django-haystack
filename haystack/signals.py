@@ -17,14 +17,7 @@ class BaseSignalProcessor:
         self.setup()
 
     def setup(self):
-        """
-        A hook for setting up anything necessary for
-        ``handle_save/handle_delete`` to be executed.
-
-        Default behavior is to do nothing (``pass``).
-        """
-        # Do nothing.
-        pass
+// No changes are required in the provided code snippet.
 
     def teardown(self):
         """

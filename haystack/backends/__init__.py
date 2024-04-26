@@ -145,13 +145,7 @@ class BaseSearchBackend:
         dwithin=None,
         distance_point=None,
         models=None,
-        limit_to_registered_models=None,
-        result_class=None,
-        **extra_kwargs
-    ):
-        # A convenience method most backends should include in order to make
-        # extension easier.
-        raise NotImplementedError
+// Your code snippet goes here
 
     def prep_value(self, value):
         """
