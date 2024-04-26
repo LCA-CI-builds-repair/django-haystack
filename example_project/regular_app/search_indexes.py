@@ -24,9 +24,8 @@ class DogIndex(indexes.SearchIndex, indexes.Indexable):
         return self.get_model().objects.filter(public=True)
 
     def prepare_toys(self, obj):
-        # Store a list of id's for filtering
-        return [toy.id for toy in obj.toys.all()]
-
-        # Alternatively, you could store the names if searching for toy names
-        # is more useful.
-        # return [toy.name for toy in obj.toys.all()]
+        try:
+            # Store a list of id's for filtering
+            return [toy.id for toy in obj.toys.all()]
+        except ObjectDoesNotExist:
+            self.log.error("Object could not be found in database for SearchResult.")

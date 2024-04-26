@@ -376,17 +376,10 @@ class SearchQuerySet:
                 .get_unified_index()
                 .get_indexed_models()
             ):
-                warnings.warn("The model %r is not registered for search." % (model,))
-
-            clone.query.add_model(model)
-
-        return clone
-
-    def result_class(self, klass):
-        """
-        Allows specifying a different class to use for results.
-
-        Overrides any previous usages. If ``None`` is provided, Haystack will
+                try:
+                    warnings.warn("The model %r is not registered for search." % (model,))
+                except ObjectDoesNotExist:
+                    self.log.warning("The model %r is not registered for search." % (model,))
         revert back to the default ``SearchResult`` object.
         """
         clone = self._clone()

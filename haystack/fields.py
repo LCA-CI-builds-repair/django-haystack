@@ -193,12 +193,15 @@ class SearchField:
         returns the result of rendering that template. ``object`` will be in
         its context.
         """
-        if self.instance_name is None and self.template_name is None:
-            raise SearchFieldError(
-                "This field requires either its instance_name variable to be populated or an explicit template_name in order to load the correct template."
-            )
+        try:
+            if self.instance_name is None and self.template_name is None:
+                raise SearchFieldError(
+                    "This field requires either its instance_name variable to be populated or an explicit template_name in order to load the correct template."
+                )
 
-        if self.template_name is not None:
+            if self.template_name is not None:
+        except ObjectDoesNotExist:
+            self.log.error("Object could not be found in database for SearchResult.")
             template_names = self.template_name
 
             if not isinstance(template_names, (list, tuple)):

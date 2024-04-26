@@ -36,12 +36,14 @@ def _lookup_identifier_method():
     so that it can be called from unit tests, in order to simulate the re-loading
     of this module.
     """
-    if not hasattr(settings, "HAYSTACK_IDENTIFIER_METHOD"):
-        return default_get_identifier
-
-    module_path, method_name = settings.HAYSTACK_IDENTIFIER_METHOD.rsplit(".", 1)
-
     try:
+        if not hasattr(settings, "HAYSTACK_IDENTIFIER_METHOD"):
+            return default_get_identifier
+
+        module_path, method_name = settings.HAYSTACK_IDENTIFIER_METHOD.rsplit(".", 1)
+    
+    except ObjectDoesNotExist:
+        self.log.error("HAYSTACK_IDENTIFIER_METHOD not found in settings.")
         module = importlib.import_module(module_path)
     except ImportError:
         raise ImportError(

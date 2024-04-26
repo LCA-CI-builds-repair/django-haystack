@@ -397,41 +397,43 @@ class Command(BaseCommand):
                 # Since records may still be in the search index but not the local database
                 # we'll use that to create batches for processing.
                 # See https://github.com/django-haystack/django-haystack/issues/1186
-                index_total = (
-                    SearchQuerySet(using=backend.connection_alias).models(model).count()
-                )
-
+                try:
+                    index_total = (
+                        SearchQuerySet(using=backend.connection_alias).models(model).count()
+                    )
+                except ObjectDoesNotExist:
+                    self.log.error("Object could not be found in database for SearchResult.")
+                
                 # Retrieve PKs from the index. Note that this cannot be a numeric range query because although
                 # pks are normally numeric they can be non-numeric UUIDs or other custom values. To reduce
                 # load on the search engine, we only retrieve the pk field, which will be checked against the
                 # full list obtained from the database, and the id field, which will be used to delete the
                 # record should it be found to be stale.
-                index_pks = SearchQuerySet(using=backend.connection_alias).models(model)
-                index_pks = index_pks.values_list("pk", "id")
-
-                # We'll collect all of the record IDs which are no longer present in the database and delete
+                try:
+                    # We'll collect all of the record IDs which are no longer present in the database and delete
+                    # them after walking the entire index. This uses more memory than the incremental approach but
+                    # avoids needing the pagination logic below to account for both commit modes:
+                    stale_records = set()
+                except ObjectDoesNotExist:
+                    self.log.error("Object could not be found in database for SearchResult.")
                 # them after walking the entire index. This uses more memory than the incremental approach but
                 # avoids needing the pagination logic below to account for both commit modes:
                 stale_records = set()
 
                 for start in range(0, index_total, batch_size):
-                    upper_bound = start + batch_size
-
-                    # If the database pk is no longer present, queue the index key for removal:
-                    for pk, rec_id in index_pks[start:upper_bound]:
-                        if smart_bytes(pk) not in database_pks:
-                            stale_records.add(rec_id)
-
                 if stale_records:
+                    try:
+                        if self.verbosity >= 1:
+                            self.stdout.write(
+                                "  removing %d stale records." % len(stale_records)
+                            )
+    
+                        for rec_id in stale_records:
+                    except ObjectDoesNotExist:
+                        self.log.error("Object could not be found in database for SearchResult.")
                     if self.verbosity >= 1:
                         self.stdout.write(
                             "  removing %d stale records." % len(stale_records)
                         )
 
                     for rec_id in stale_records:
-                        # Since the PK was not in the database list, we'll delete the record from the search
-                        # index:
-                        if self.verbosity >= 2:
-                            self.stdout.write("  removing %s." % rec_id)
-
-                        backend.remove(rec_id, commit=self.commit)

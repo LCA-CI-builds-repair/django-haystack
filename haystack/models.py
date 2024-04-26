@@ -69,7 +69,6 @@ class SearchResult:
         return connections[DEFAULT_ALIAS].get_unified_index().get_index(self.model)
 
     searchindex = property(_get_searchindex)
-
     def _get_object(self):
         if self._object is None:
             if self.model is None:
@@ -77,6 +76,10 @@ class SearchResult:
                 return None
 
             try:
+                # Add code here to check if the object exists in the database for SearchResult
+            except ObjectDoesNotExist:
+                self.log.error("Object could not be found in database for SearchResult '%s'.", self)
+                return None
                 try:
                     self._object = self.searchindex.read_queryset().get(pk=self.pk)
                 except NotHandled:
@@ -86,14 +89,18 @@ class SearchResult:
                         self.model_name,
                     )
                     # Revert to old behaviour
-                    self._object = self.model._default_manager.get(pk=self.pk)
-            except ObjectDoesNotExist:
-                self.log.error(
                     "Object could not be found in database for SearchResult '%s'.", self
                 )
                 self._object = None
 
         return self._object
+
+    def _set_object(self, obj):
+        try:
+            # Add code here to set the object and handle ObjectDoesNotExist error
+        except ObjectDoesNotExist:
+            self.log.error("Object could not be found in database for SearchResult '%s'.", self)
+            self._object = None
 
     def _set_object(self, obj):
         self._object = obj
@@ -125,21 +132,11 @@ class SearchResult:
             # it yet. Check if geopy is available to do it the "slow" way
             # (even though slow meant 100 distance calculations in 0.004 seconds
             # in my testing).
-            if geopy_distance is None:
-                raise SpatialError(
-                    "The backend doesn't have 'DISTANCE_AVAILABLE' enabled & the 'geopy' library could not be imported, so distance information is not available."
-                )
+            if location_field is None:
+                return None
 
-            if not self._point_of_origin:
-                raise SpatialError("The original point is not available.")
-
-            if not hasattr(self, self._point_of_origin["field"]):
-                raise SpatialError(
-                    "The field '%s' was not included in search results, so the distance could not be calculated."
-                    % self._point_of_origin["field"]
-                )
-
-            po_lng, po_lat = self._point_of_origin["point"].coords
+            lf_lng, lf_lat = location_field.coords
+            self._distance = Distance(
             location_field = getattr(self, self._point_of_origin["field"])
 
             if location_field is None:
@@ -151,45 +148,39 @@ class SearchResult:
             )
 
         # We've either already calculated it or the backend returned it, so
-        # let's use that.
-        return self._distance
-
-    def _set_distance(self, dist):
-        self._distance = dist
-
-    distance = property(_get_distance, _set_distance)
-
     def _get_verbose_name(self):
-        if self.model is None:
+        try:
+            if self.model is None:
+                self.log.error("Model could not be found for SearchResult '%s'.", self)
+                return ""
+        except ObjectDoesNotExist:
             self.log.error("Model could not be found for SearchResult '%s'.", self)
             return ""
-
+        
         return force_str(capfirst(self.model._meta.verbose_name))
 
-    verbose_name = property(_get_verbose_name)
-
     def _get_verbose_name_plural(self):
-        if self.model is None:
+        try:
+            if self.model is None:
+                self.log.error("Model could not be found for SearchResult '%s'.", self)
+                return ""
+        except ObjectDoesNotExist:
             self.log.error("Model could not be found for SearchResult '%s'.", self)
             return ""
-
+        
         return force_str(capfirst(self.model._meta.verbose_name_plural))
-
-    verbose_name_plural = property(_get_verbose_name_plural)
 
     def content_type(self):
         """Returns the content type for the result's model instance."""
-        if self.model is None:
+        try:
+            if self.model is None:
+                self.log.error("Model could not be found for SearchResult '%s'.", self)
+                return ""
+        except ObjectDoesNotExist:
             self.log.error("Model could not be found for SearchResult '%s'.", self)
             return ""
-
+        
         return str(self.model._meta)
-
-    def get_additional_fields(self):
-        """
-        Returns a dictionary of all of the fields from the raw result.
-
-        Useful for serializing results. Only returns what was seen from the
         search engine, so it may have extra fields Haystack's indexes aren't
         aware of.
         """

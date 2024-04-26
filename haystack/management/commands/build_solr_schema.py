@@ -118,12 +118,14 @@ class Command(BaseCommand):
                     "'ADMIN_URL' must be specified in the HAYSTACK_CONNECTIONS"
                     " for the %s backend" % using
                 )
-            if "URL" not in settings.HAYSTACK_CONNECTIONS[using]:
-                raise ImproperlyConfigured(
-                    "'URL' must be specified in the HAYSTACK_CONNECTIONS"
-                    " for the %s backend" % using
-                )
-
+            try:
+                if "URL" not in settings.HAYSTACK_CONNECTIONS[using]:
+                    raise ImproperlyConfigured(
+                        "'URL' must be specified in the HAYSTACK_CONNECTIONS"
+                        " for the %s backend" % using
+                    )
+            except ObjectDoesNotExist:
+                self.log.error("Required configurations not found in HAYSTACK_CONNECTIONS for the %s backend", using)
             try:
                 self.stdout.write("Trying to reload core named {}".format(core))
                 resp = requests.get(

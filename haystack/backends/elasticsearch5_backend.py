@@ -145,16 +145,13 @@ class Elasticsearch5SearchBackend(ElasticsearchSearchBackend):
                         "_geo_distance": {
                             distance_point["field"]: [lng, lat],
                             "order": direction,
-                            "unit": "km",
-                        }
-                    }
-                else:
-                    if field == "distance":
-                        warnings.warn(
-                            "In order to sort by distance, you must call the '.distance(...)' method."
-                        )
-
-                    # Regular sorting.
+                    "unit": "km",
+                }
+            else:
+                try:
+                    # Add code here to handle ObjectDoesNotExist error for the object in the SearchResult
+                except ObjectDoesNotExist:
+                    self.log.error("Object could not be found in database for SearchResult '%s'.", self)
                     sort_kwargs = {field: {"order": direction}}
 
                 order_list.append(sort_kwargs)

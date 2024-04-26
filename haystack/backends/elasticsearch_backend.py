@@ -380,16 +380,13 @@ class ElasticsearchSearchBackend(BaseSearchBackend):
                         "_geo_distance": {
                             distance_point["field"]: [lng, lat],
                             "order": direction,
-                            "unit": "km",
-                        }
-                    }
-                else:
-                    if field == "distance":
-                        warnings.warn(
-                            "In order to sort by distance, you must call the '.distance(...)' method."
-                        )
-
-                    # Regular sorting.
+                    "unit": "km",
+                }
+            else:
+                try:
+                    # Add code here to handle ObjectDoesNotExist error for the object in the SearchResult
+                except ObjectDoesNotExist:
+                    self.log.error("Object could not be found in database for SearchResult '%s'.", self)
                     sort_kwargs = {field: {"order": direction}}
 
                 order_list.append(sort_kwargs)
@@ -559,18 +556,21 @@ class ElasticsearchSearchBackend(BaseSearchBackend):
         search_kwargs["from"] = kwargs.get("start_offset", 0)
 
         order_fields = set()
+        search_kwargs["from"] = kwargs.get("start_offset", 0)
+
+        order_fields = set()
         for order in search_kwargs.get("sort", []):
             for key in order.keys():
                 order_fields.add(key)
 
-        geo_sort = "_geo_distance" in order_fields
-
+        try:
+            geo_sort = "_geo_distance" in order_fields
+        except ObjectDoesNotExist:
+            self.log.error("Object could not be found in database for SearchResult.")
+        
         end_offset = kwargs.get("end_offset")
         start_offset = kwargs.get("start_offset", 0)
         if end_offset is not None and end_offset > start_offset:
-            search_kwargs["size"] = end_offset - start_offset
-
-        try:
             raw_results = self.conn.search(
                 body=search_kwargs,
                 index=self.index_name,

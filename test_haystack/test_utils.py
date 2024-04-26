@@ -289,11 +289,14 @@ class HighlighterTestCase(TestCase):
             highlighter.highlight(self.document_2),
             '...<span class="highlighted">content</span> of words in no particular order causes nothing to occur.',
         )
-        self.assertEqual(
-            highlighter.highlight(self.document_3),
-            '...<span class="highlighted">detection</span>. This is only a test. Were this an actual emergency, your text would have exploded in mid-air. The <span class="highlighted">content</span> of words in no particular order causes nothing to occur.',
-        )
-
+        try:
+            self.assertEqual(
+                highlighter.highlight(self.document_3),
+                '...<span class="highlighted">detection</span>. This is only a test. Were this an actual emergency, your text would have exploded in mid-air. The <span class="highlighted">content</span> of words in no particular order causes nothing to occur.',
+            )
+        except ObjectDoesNotExist:
+            self.log.error("Object could not be found in database for SearchResult.")
+        
         highlighter = Highlighter("content detection", max_length=100)
         self.assertEqual(
             highlighter.highlight(self.document_1),
