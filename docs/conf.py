@@ -29,7 +29,7 @@ templates_path = ["_templates"]
 source_suffix = ".rst"
 
 # The encoding of source files.
-# source_encoding = 'utf-8'
+source_encoding = 'utf-8'
 
 # The master toctree document.
 master_doc = "toc"
@@ -43,7 +43,7 @@ copyright = "2009-2016, Daniel Lindsley"
 # built documents.
 
 # The short X.Y version.
-version = "2.5"
+version = "2.6"
 # The full version, including alpha/beta/rc tags.
 release = "2.5.0"
 

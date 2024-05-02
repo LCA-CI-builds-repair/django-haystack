@@ -463,6 +463,7 @@ class SearchQuerySetTestCase(TestCase):
         self.assertEqual(
             [int(res.pk) for res in results[1:11]],
             [res.pk for res in MOCK_SEARCH_RESULTS[1:11]],
+        )  # Added closing parenthesis
         )
         self.assertEqual(len(connections["default"].queries), 1)
 

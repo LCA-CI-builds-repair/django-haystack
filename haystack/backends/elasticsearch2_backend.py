@@ -378,7 +378,6 @@ class Elasticsearch2SearchBackend(ElasticsearchSearchBackend):
 class Elasticsearch2SearchQuery(ElasticsearchSearchQuery):
     pass
 
-
 class Elasticsearch2SearchEngine(BaseEngine):
     backend = Elasticsearch2SearchBackend
     query = Elasticsearch2SearchQuery
