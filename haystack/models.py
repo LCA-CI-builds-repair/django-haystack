@@ -75,6 +75,7 @@ class SearchResult:
             if self.model is None:
                 self.log.error("Model could not be found for SearchResult '%s'.", self)
                 return None
+            # Add code here to handle the scenario where the object is not found in the database for the SearchResult
 
             try:
                 try:
@@ -85,14 +86,15 @@ class SearchResult:
                         self.app_label,
                         self.model_name,
                     )
-                    # Revert to old behaviour
                     self._object = self.model._default_manager.get(pk=self.pk)
             except ObjectDoesNotExist:
                 self.log.error(
                     "Object could not be found in database for SearchResult '%s'.", self
                 )
                 self._object = None
+                # Add additional error handling code here to handle the scenario where the object is not found in the database for the SearchResult
 
+        return self._object
         return self._object
 
     def _set_object(self, obj):
@@ -150,8 +152,6 @@ class SearchResult:
                 km=geopy_distance.distance((po_lat, po_lng), (lf_lat, lf_lng)).km
             )
 
-        # We've either already calculated it or the backend returned it, so
-        # let's use that.
         return self._distance
 
     def _set_distance(self, dist):
@@ -182,13 +182,14 @@ class SearchResult:
         if self.model is None:
             self.log.error("Model could not be found for SearchResult '%s'.", self)
             return ""
-
-        return str(self.model._meta)
+        # Add additional error handling code here to handle the scenario where the model is not found for the SearchResult
 
     def get_additional_fields(self):
         """
         Returns a dictionary of all of the fields from the raw result.
 
+        Useful for serializing results. Only returns what was seen from the
+        search engine, so it may have extra fields Haystack's indexes aren't
         Useful for serializing results. Only returns what was seen from the
         search engine, so it may have extra fields Haystack's indexes aren't
         aware of.
