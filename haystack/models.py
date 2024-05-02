@@ -83,7 +83,7 @@ class SearchResult:
                     self.log.warning(
                         "Model '%s.%s' not handled by the routers.",
                         self.app_label,
-                        self.model_name,
+                        self.model_name
                     )
                     # Revert to old behaviour
                     self._object = self.model._default_manager.get(pk=self.pk)
@@ -109,7 +109,6 @@ class SearchResult:
                 # returning None when the model isn't found. So catch the
                 # lookup error and keep self._model == None.
                 pass
-
         return self._model
 
     def _set_model(self, obj):
@@ -194,13 +193,12 @@ class SearchResult:
         aware of.
         """
         additional_fields = {}
+        additional_fields = {}
 
         for fieldname in self._additional_fields:
             additional_fields[fieldname] = getattr(self, fieldname)
 
         return additional_fields
-
-    def get_stored_fields(self):
         """
         Returns a dictionary of all of the stored fields from the SearchIndex.
 
