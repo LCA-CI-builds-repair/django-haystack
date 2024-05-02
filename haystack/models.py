@@ -73,7 +73,7 @@ class SearchResult:
     def _get_object(self):
         if self._object is None:
             if self.model is None:
-                self.log.error("Model could not be found for SearchResult '%s'.", self)
+                self.log.error("Model could not be found for SearchResult '%s'.", str(self))
                 return None
 
             try:
@@ -89,7 +89,7 @@ class SearchResult:
                     self._object = self.model._default_manager.get(pk=self.pk)
             except ObjectDoesNotExist:
                 self.log.error(
-                    "Object could not be found in database for SearchResult '%s'.", self
+                    "Object could not be found in database for SearchResult '%s'.", str(self)
                 )
                 self._object = None
 
@@ -161,7 +161,7 @@ class SearchResult:
 
     def _get_verbose_name(self):
         if self.model is None:
-            self.log.error("Model could not be found for SearchResult '%s'.", self)
+            self.log.error("Model could not be found for SearchResult '%s'.", str(self))
             return ""
 
         return force_str(capfirst(self.model._meta.verbose_name))
@@ -170,7 +170,7 @@ class SearchResult:
 
     def _get_verbose_name_plural(self):
         if self.model is None:
-            self.log.error("Model could not be found for SearchResult '%s'.", self)
+            self.log.error("Model could not be found for SearchResult '%s'.", str(self))
             return ""
 
         return force_str(capfirst(self.model._meta.verbose_name_plural))
@@ -180,7 +180,7 @@ class SearchResult:
     def content_type(self):
         """Returns the content type for the result's model instance."""
         if self.model is None:
-            self.log.error("Model could not be found for SearchResult '%s'.", self)
+            self.log.error("Model could not be found for SearchResult '%s'.", str(self))
             return ""
 
         return str(self.model._meta)
