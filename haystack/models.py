@@ -132,7 +132,6 @@ class SearchResult:
 
             if not self._point_of_origin:
                 raise SpatialError("The original point is not available.")
-
             if not hasattr(self, self._point_of_origin["field"]):
                 raise SpatialError(
                     "The field '%s' was not included in search results, so the distance could not be calculated."
