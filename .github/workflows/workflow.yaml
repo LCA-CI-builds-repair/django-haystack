@@ -1,10 +1,6 @@
 name: Test
 
-on:
-  push:
-    branches: [master]
-  pull_request:
-    branches: [master]
+on: push
 
 jobs:
   ruff:  # https://docs.astral.sh/ruff
@@ -20,30 +16,30 @@ jobs:
     strategy:
       fail-fast: false
       matrix:  # https://docs.djangoproject.com/en/5.0/faq/install/#what-python-version-can-i-use-with-django
-        django-version: ["3.2", "4.0", "4.1", "4.2", "5.0"]
-        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
-        elastic-version: ["7.17.9"]
+        django-version: ['3.2', '4.0', '4.1', '4.2', '5.0']
+        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12']
+        elastic-version: [7.17.9]
         exclude:
-          - django-version: "5.0"
-            python-version: "3.8"
-          - django-version: "5.0"
-            python-version: "3.9"
+        - django-version: '5.0'
+          python-version: '3.8'
+        - django-version: '5.0'
+          python-version: '3.9'
     services:
       elastic:
         image: elasticsearch:${{ matrix.elastic-version }}
         env:
-          discovery.type: "single-node"
+          discovery.type: single-node
         options: >-
           --health-cmd "curl http://localhost:9200/_cluster/health"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 10
         ports:
-          - 9200:9200
+        - 9200:9200
       solr:
         image: solr:6
         ports:
-          - 9001:8983
+        - 9001:8983
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python ${{ matrix.python-version }}
