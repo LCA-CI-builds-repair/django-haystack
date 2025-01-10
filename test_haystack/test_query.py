@@ -1,5 +1,6 @@
 import datetime
 import pickle
+from django.conf import settings
 
 from django.test import TestCase
 from django.test.utils import override_settings
@@ -556,6 +557,8 @@ class SearchQuerySetTestCase(TestCase):
         self.assertEqual(len(connections["default"].queries), 4)
 
     def test_all(self):
+        settings.DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+        
         sqs = self.msqs.all()
         self.assertTrue(isinstance(sqs, SearchQuerySet))
 
