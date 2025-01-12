@@ -697,7 +697,12 @@ class SearchQuerySetTestCase(TestCase):
 
         sqs = SearchQuerySet()
         results = sqs.load_all().all()
-        results.query.backend = ReadQuerySetMockSearchBackend("default")
+        results.query.backend
+
+    def assertRegex(self, *args, **kwargs):
+        # Python 3.1 and lower use assertRegexpMatches
+        return (self.assertRegexpMatches or self.assertRegex)(*args, **kwargs)
+ = ReadQuerySetMockSearchBackend("default")
         results._fill_cache(0, 2)
 
         # The deleted result isn't returned
