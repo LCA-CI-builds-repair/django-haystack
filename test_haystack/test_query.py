@@ -60,7 +60,7 @@ class SQTestCase(TestCase):
 
     def test_repr(self):
         self.assertEqual(repr(SQ(foo="bar")), "<SQ: AND foo__content=bar>")
-        self.assertEqual(repr(SQ(foo=1)), "<SQ: AND foo__content=1>")
+        self.assertEqual(repr(SQ(foo=1)), "<SQ: AND foo__content='1'>")
         self.assertEqual(
             repr(SQ(foo=datetime.datetime(2009, 5, 12, 23, 17))),
             "<SQ: AND foo__content=2009-05-12 23:17:00>",
@@ -442,7 +442,7 @@ class SearchQuerySetTestCase(TestCase):
     def test_repr(self):
         reset_search_queries()
         self.assertEqual(len(connections["default"].queries), 0)
-        self.assertRegexp(
+        self.assertRegex(
             repr(self.msqs),
             r"^<SearchQuerySet: query=<test_haystack.mocks.MockSearchQuery object"
             r" at 0x[0-9A-Fa-f]+>, using=None>$",
