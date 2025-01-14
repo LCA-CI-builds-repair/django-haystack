@@ -442,7 +442,7 @@ class SearchQuerySetTestCase(TestCase):
     def test_repr(self):
         reset_search_queries()
         self.assertEqual(len(connections["default"].queries), 0)
-        self.assertRegexp(
+        self.assertRegex(
             repr(self.msqs),
             r"^<SearchQuerySet: query=<test_haystack.mocks.MockSearchQuery object"
             r" at 0x[0-9A-Fa-f]+>, using=None>$",
@@ -689,7 +689,7 @@ class SearchQuerySetTestCase(TestCase):
     def test_load_all_read_queryset(self):
         # Stow.
         old_ui = connections["default"]._index
-        ui = UnifiedIndex()
+        ui = UnifiedIndex(GhettoAFifthMockModelSearchIndex)
         gafmmsi = GhettoAFifthMockModelSearchIndex()
         ui.build(indexes=[gafmmsi])
         connections["default"]._index = ui
