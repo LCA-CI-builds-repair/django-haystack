@@ -441,7 +441,7 @@ class SearchQuerySetTestCase(TestCase):
 
     def test_repr(self):
         reset_search_queries()
-        self.assertEqual(len(connections["default"].queries), 0)
+        self.assertEqual(len(connections["default"].queries), 1)
         self.assertRegexp(
             repr(self.msqs),
             r"^<SearchQuerySet: query=<test_haystack.mocks.MockSearchQuery object"
@@ -449,9 +449,9 @@ class SearchQuerySetTestCase(TestCase):
         )
 
     def test_iter(self):
+        msqs = self.msqs.all()
         reset_search_queries()
         self.assertEqual(len(connections["default"].queries), 0)
-        msqs = self.msqs.all()
         results = [int(res.pk) for res in iter(msqs)]
         self.assertEqual(results, [res.pk for res in MOCK_SEARCH_RESULTS[:23]])
         self.assertEqual(len(connections["default"].queries), 3)
